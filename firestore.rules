@@ -1,0 +1,96 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny all by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global helper primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-\\.]+$');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'sahwanto41@admin.sd.belajar.id') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isStaffOrAdmin() {
+      return isSignedIn() && (
+        isAdmin() ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'operator', 'kepala_sekolah'])
+      );
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Master Employee Records
+    match /employees/{employeeId} {
+      allow read: if isSignedIn();
+      allow create, update: if isStaffOrAdmin() && isValidId(employeeId);
+      allow delete: if isAdmin() && isValidId(employeeId);
+    }
+
+    // Employment History Audit
+    match /employmentHistory/{historyId} {
+      allow read: if isSignedIn();
+      allow create: if isStaffOrAdmin() && isValidId(historyId);
+      allow update, delete: if isAdmin() && isValidId(historyId);
+    }
+
+    // Employee Credentials & Document Metadata
+    match /employeeDocuments/{docId} {
+      allow read: if isSignedIn();
+      allow create, update: if isStaffOrAdmin() && isValidId(docId);
+      allow delete: if isAdmin() && isValidId(docId);
+    }
+
+    // Official DUK Periods
+    match /dukPeriods/{periodId} {
+      allow read: if isSignedIn();
+      allow create, update: if isStaffOrAdmin() && isValidId(periodId);
+      allow delete: if isAdmin() && isValidId(periodId);
+    }
+
+    // Frozen DUK Snapshots
+    match /dukSnapshots/{snapshotId} {
+      allow read: if isSignedIn();
+      allow create: if isStaffOrAdmin() && isValidId(snapshotId);
+      allow update, delete: if isAdmin() && isValidId(snapshotId);
+    }
+
+    // Security & Audit Logs
+    match /auditLogs/{logId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId);
+      allow update, delete: if isAdmin() && isValidId(logId);
+    }
+
+    // Global Institution & App Configuration (Public read for school name & header)
+    match /appSettings/{settingId} {
+      allow read: if true;
+      allow write: if isStaffOrAdmin() && isValidId(settingId);
+    }
+  }
+}

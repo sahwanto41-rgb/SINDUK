@@ -1,0 +1,218 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role assignment in DUK SMART",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin", "operator", "kepala_sekolah", "auditor"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Master employee record for SD Negeri Lanas 1",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "nip": { "type": "string", "maxLength": 30 },
+        "namaLengkap": { "type": "string", "maxLength": 150 },
+        "gelarDepan": { "type": "string", "maxLength": 30 },
+        "gelarBelakang": { "type": "string", "maxLength": 50 },
+        "tempatLahir": { "type": "string", "maxLength": 100 },
+        "tanggalLahir": { "type": "string", "maxLength": 15 },
+        "jenisKelamin": { "type": "string", "enum": ["L", "P"] },
+        "alamat": { "type": "string", "maxLength": 300 },
+        "noTelepon": { "type": "string", "maxLength": 30 },
+        "statusKepegawaian": { "type": "string", "enum": ["PNS", "PPPK", "NON_ASN"] },
+        "jenisPtk": { "type": "string", "enum": ["GURU", "TENAGA_KEPENDIDIKAN"] },
+        "pangkat": { "type": "string", "maxLength": 100 },
+        "golonganRuang": { "type": "string", "maxLength": 10 },
+        "tmtPangkat": { "type": "string", "maxLength": 15 },
+        "noSkPangkat": { "type": "string", "maxLength": 100 },
+        "tglSkPangkat": { "type": "string", "maxLength": 15 },
+        "jabatanUtama": { "type": "string", "maxLength": 150 },
+        "jabatanTambahan": { "type": "string", "maxLength": 150 },
+        "jenisJabatan": { "type": "string", "maxLength": 100 },
+        "tmtJabatan": { "type": "string", "maxLength": 15 },
+        "tmtSekolah": { "type": "string", "maxLength": 15 },
+        "tglMulaiTugasLanas1": { "type": "string", "maxLength": 15 },
+        "unitKerjaAsal": { "type": "string", "maxLength": 150 },
+        "noSkPenempatan": { "type": "string", "maxLength": 100 },
+        "pendidikanTerakhir": { "type": "string", "maxLength": 100 },
+        "jenjangPendidikan": { "type": "string", "maxLength": 30 },
+        "programStudi": { "type": "string", "maxLength": 100 },
+        "institusiPendidikan": { "type": "string", "maxLength": 150 },
+        "tahunLulus": { "type": "string", "maxLength": 10 },
+        "mkGolonganTahun": { "type": "number" },
+        "mkGolonganBulan": { "type": "number" },
+        "mkKeseluruhanTahun": { "type": "number" },
+        "mkKeseluruhanBulan": { "type": "number" },
+        "tglAcuanMasaKerja": { "type": "string", "maxLength": 15 },
+        "sumberSkMasaKerja": { "type": "string", "maxLength": 150 },
+        "isDataLengkap": { "type": "boolean" },
+        "statusAktif": { "type": "string", "enum": ["AKTIF", "MUTASI_KELUAR", "PENSIUN", "CUTI", "TIDAK_AKTIF"] },
+        "keterangan": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["namaLengkap", "statusKepegawaian", "tmtSekolah"]
+    },
+    "EmploymentHistory": {
+      "title": "EmploymentHistory",
+      "description": "Historical audit log of employee rank, position, placement, or status changes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "employeeId": { "type": "string", "maxLength": 128 },
+        "employeeName": { "type": "string", "maxLength": 150 },
+        "tipePerubahan": { "type": "string", "enum": ["PANGKAT", "JABATAN", "PENEMPATAN", "PENDIDIKAN", "MASA_KERJA", "STATUS", "KOREKSI"] },
+        "dataSebelum": { "type": "string", "maxLength": 2000 },
+        "dataSesudah": { "type": "string", "maxLength": 2000 },
+        "alasanPerubahan": { "type": "string", "maxLength": 500 },
+        "nomorDokumen": { "type": "string", "maxLength": 150 },
+        "diubahOleh": { "type": "string", "maxLength": 150 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["employeeId", "tipePerubahan", "alasanPerubahan", "diubahOleh"]
+    },
+    "EmployeeDocument": {
+      "title": "EmployeeDocument",
+      "description": "Employee official credentials and document archive metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "employeeId": { "type": "string", "maxLength": 128 },
+        "employeeName": { "type": "string", "maxLength": 150 },
+        "jenisDokumen": { "type": "string", "enum": ["SK_PENGANGKATAN", "SK_PANGKAT", "SK_JABATAN", "SK_PENEMPATAN_MUTASI", "IJAZAH", "DOKUMEN_MASA_KERJA", "PERJANJIAN_KERJA_PPPK", "LAINNYA"] },
+        "namaDokumen": { "type": "string", "maxLength": 200 },
+        "nomorDokumen": { "type": "string", "maxLength": 150 },
+        "tanggalDokumen": { "type": "string", "maxLength": 15 },
+        "fileUrl": { "type": "string", "maxLength": 2000 },
+        "fileSize": { "type": "number" },
+        "fileType": { "type": "string", "maxLength": 100 },
+        "statusVerifikasi": { "type": "string", "enum": ["TERVERIFIKASI", "MENUNGGU_VERIFIKASI", "DITOLAK"] },
+        "catatanVerifikasi": { "type": "string", "maxLength": 300 },
+        "uploadedBy": { "type": "string", "maxLength": 150 },
+        "uploadedAt": { "type": "string" }
+      },
+      "required": ["employeeId", "jenisDokumen", "namaDokumen"]
+    },
+    "DukPeriod": {
+      "title": "DukPeriod",
+      "description": "DUK official tracking periods and freeze snapshots",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "namaPeriode": { "type": "string", "maxLength": 150 },
+        "tahun": { "type": "number" },
+        "tanggalAcuan": { "type": "string", "maxLength": 15 },
+        "status": { "type": "string", "enum": ["DRAFT", "DIPERIKSA", "DISAHKAN"] },
+        "tanggalPengesahan": { "type": "string", "maxLength": 30 },
+        "pejabatPengesah": { "type": "string", "maxLength": 150 },
+        "nipPengesah": { "type": "string", "maxLength": 30 },
+        "keterangan": { "type": "string", "maxLength": 500 },
+        "jumlahPegawai": { "type": "number" },
+        "jumlahPns": { "type": "number" },
+        "jumlahPppk": { "type": "number" },
+        "jumlahNonAsn": { "type": "number" },
+        "isAktif": { "type": "boolean" },
+        "createdBy": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["namaPeriode", "tahun", "tanggalAcuan", "status"]
+    },
+    "DukSnapshot": {
+      "title": "DukSnapshot",
+      "description": "Immutable frozen snapshot of employee ranking list when a DUK period is finalized",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "periodId": { "type": "string", "maxLength": 128 },
+        "periodName": { "type": "string", "maxLength": 150 },
+        "tanggalPengesahan": { "type": "string", "maxLength": 30 },
+        "snapshotData": { "type": "string" },
+        "disahkanOleh": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["periodId", "snapshotData"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "System audit and security event trail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "action": { "type": "string", "maxLength": 100 },
+        "userEmail": { "type": "string", "maxLength": 256 },
+        "userName": { "type": "string", "maxLength": 150 },
+        "details": { "type": "string", "maxLength": 1000 },
+        "ipAddress": { "type": "string", "maxLength": 50 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["action", "userEmail", "timestamp"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "System and institution configuration",
+      "type": "object",
+      "properties": {
+        "namaSekolah": { "type": "string", "maxLength": 150 },
+        "npsn": { "type": "string", "maxLength": 30 },
+        "kecamatan": { "type": "string", "maxLength": 100 },
+        "kabupaten": { "type": "string", "maxLength": 100 },
+        "provinsi": { "type": "string", "maxLength": 100 },
+        "alamatLengkap": { "type": "string", "maxLength": 300 },
+        "kodePos": { "type": "string", "maxLength": 10 },
+        "namaKepalaSekolah": { "type": "string", "maxLength": 150 },
+        "nipKepalaSekolah": { "type": "string", "maxLength": 30 },
+        "pangkatKepalaSekolah": { "type": "string", "maxLength": 100 },
+        "logoUrl": { "type": "string", "maxLength": 2000 },
+        "dukOrderConfig": { "type": "string", "maxLength": 2000 },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["namaSekolah", "namaKepalaSekolah"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile with role permission"
+    },
+    "/employees/{employeeId}": {
+      "schema": { "$ref": "#/entities/Employee" },
+      "description": "Master employee records"
+    },
+    "/employmentHistory/{historyId}": {
+      "schema": { "$ref": "#/entities/EmploymentHistory" },
+      "description": "Audit trails for employee progression and corrections"
+    },
+    "/employeeDocuments/{docId}": {
+      "schema": { "$ref": "#/entities/EmployeeDocument" },
+      "description": "Digital archives and credentials metadata"
+    },
+    "/dukPeriods/{periodId}": {
+      "schema": { "$ref": "#/entities/DukPeriod" },
+      "description": "DUK official tracking periods"
+    },
+    "/dukSnapshots/{snapshotId}": {
+      "schema": { "$ref": "#/entities/DukSnapshot" },
+      "description": "Frozen period snapshots"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "System security and action logs"
+    },
+    "/appSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/AppSettings" },
+      "description": "Global application configuration"
+    }
+  }
+}

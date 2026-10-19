@@ -1,0 +1,6 @@
+{
+  "name": "DUK SMART - SD Negeri Lanas 1",
+  "description": "Sistem Informasi Daftar Urut Kepangkatan UPTD SPF SD Negeri Lanas 1 Kecamatan Botolinggo Kabupaten Bondowoso",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
